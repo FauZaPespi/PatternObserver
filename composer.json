@@ -1,15 +1,20 @@
 {
-    "name": "fauza/template",
+    "name": "makosc/observer",
     "description": "Best template of all time !!!",
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Fauza\\Template\\": "src/"
+            "Makosc\\Observer\\": "src/"
         }
     },
-    "authors": [{
-        "name": "FauZaPespi"
-    }],
+    "authors": [
+        {
+            "name": "Calvo Oscar"
+        },
+        {
+            "name": "Ptytsia Maksym"
+        }
+    ],
     "license": "Palms",
     "minimum-stability": "stable",
     "require": {

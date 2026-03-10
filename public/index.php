@@ -1,4 +1,8 @@
 <?php
+require __DIR__ . '/../vendor/autoload.php';
+use Makosc\Observer\Models\NewsPublisher;
+use Makosc\Observer\Models\ConcreteSubscriber;
+use Makosc\Observer\Models\Subscriber;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;

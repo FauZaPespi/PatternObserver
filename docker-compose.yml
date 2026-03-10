@@ -1,4 +1,27 @@
 services:
+  # Service MariaDB (Base de données)
+  mariadb:
+    image: mariadb:10.11
+    container_name: ${APP_NAME}_mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${DB_NAME:-observer_db}
+      MYSQL_USER: ${DB_USER:-observer_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-observer_pass}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
   # Service PHP (Le moteur)
   php:
     build:
@@ -7,8 +30,17 @@ services:
     container_name: ${APP_NAME}_php
     volumes:
       - .:/var/www/html
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-observer_db}
+      DB_USER: ${DB_USER:-observer_user}
+      DB_PASSWORD: ${DB_PASSWORD:-observer_pass}
     networks:
       - app_network
+    depends_on:
+      mariadb:
+        condition: service_healthy
 
   # Service Nginx (Le serveur web)
   web:
@@ -23,6 +55,10 @@ services:
       - php
     networks:
       - app_network
+
+volumes:
+  mariadb_data:
+    driver: local
 
 networks:
   app_network:

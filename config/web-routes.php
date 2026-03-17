@@ -26,6 +26,9 @@ $app->get('/register', [AuthController::class, 'registerView']);
 $app->post('/register', [AuthController::class, 'register']);
 $app->get('/logout', [AuthController::class, 'logout']);
 $app->post('/logout', [AuthController::class, 'logout']);
+$app->get('/profile', [AuthController::class, 'profile']);
+$app->post('/profile/update', [AuthController::class, 'profileUpdate']);
+$app->post('/profile/password', [AuthController::class, 'profilePassword']);
 
 // Routes de l'API (à conserver si nécessaire)
 $app->post('/subscribe', [MainController::class, 'subscribeTo']);

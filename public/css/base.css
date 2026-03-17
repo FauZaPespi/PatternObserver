@@ -1,0 +1,28 @@
+/* CSS Flexbox pour garder le footer en bas de la page */
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    background-color: #f4f6f8;
+}
+
+/* Conteneur principal qui prend tout l'espace restant */
+main {
+    flex: 1;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* Ajustement de la marge du footer */
+.ui.footer.segment {
+    margin-top: auto;
+}
+
+/* Messages flash */
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.ui.message {
+    margin-bottom: 10px;
+}

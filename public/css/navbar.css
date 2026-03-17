@@ -1,0 +1,35 @@
+/* Navigation style 2017 Twitter */
+.ui.inverted.menu {
+    border-radius: 0;
+    background: #1DA1F2;
+}
+
+.ui.inverted.menu .item {
+    color: rgba(255,255,255,0.9);
+}
+
+.ui.inverted.menu .item:hover {
+    background: rgba(255,255,255,0.15);
+    color: white;
+}
+
+.ui.inverted.menu .active.item {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+/* User dropdown in nav */
+.ui.inverted.menu .ui.dropdown .menu {
+    background: white;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.ui.inverted.menu .ui.dropdown .menu > .item {
+    color: #333 !important;
+}
+
+.ui.inverted.menu .ui.dropdown .menu > .item:hover {
+    background: #f4f6f8 !important;
+    color: #1DA1F2 !important;
+}

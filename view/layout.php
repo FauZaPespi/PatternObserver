@@ -29,10 +29,10 @@
             margin-top: auto;
         }
 
-        /* Navigation style 2016-2017 */
+        /* Navigation style 2017 Twitter */
         .ui.inverted.menu {
             border-radius: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1DA1F2;
         }
 
         .ui.inverted.menu .item {
@@ -71,7 +71,121 @@
 
         .ui.inverted.menu .ui.dropdown .menu > .item:hover {
             background: #f4f6f8 !important;
-            color: #667eea !important;
+            color: #1DA1F2 !important;
+        }
+
+        /* ---- Auth card layout ---- */
+        .login-container,
+        .register-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 40px;
+        }
+
+        .login-box,
+        .register-box {
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-header,
+        .register-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .icon-wrapper {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            background: #E8F5FE;
+            border-radius: 50%;
+            margin-bottom: 12px;
+        }
+
+        .icon-wrapper i {
+            color: #1DA1F2;
+            font-size: 1.5em;
+            margin: 0;
+        }
+
+        .login-header h2,
+        .register-header h2 {
+            color: #14171A;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0 0 4px;
+        }
+
+        .login-header .sub.header,
+        .register-header .sub.header {
+            color: #657786;
+            font-size: 0.9rem;
+        }
+
+        .login-form .field,
+        .register-form .field {
+            margin-bottom: 16px;
+        }
+
+        .login-form label,
+        .register-form label {
+            color: #14171A;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .login-footer,
+        .register-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #657786;
+            font-size: 0.9rem;
+            border-top: 1px solid #E1E8ED;
+            padding-top: 16px;
+        }
+
+        .login-footer a,
+        .register-footer a {
+            color: #1DA1F2;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover,
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            margin-bottom: 16px !important;
+        }
+
+        /* Override Semantic UI button to match 2017 Twitter style */
+        .login-form .ui.fluid.submit.button,
+        .register-form .ui.fluid.submit.button {
+            background-color: #1DA1F2 !important;
+            color: #ffffff !important;
+            border-radius: 4px !important;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            padding: 12px;
+            margin-top: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .login-form .ui.fluid.submit.button:hover,
+        .register-form .ui.fluid.submit.button:hover {
+            background-color: #1a91da !important;
         }
     </style>
 </head>

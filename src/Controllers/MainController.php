@@ -36,4 +36,11 @@ class MainController
         $resp->getBody()->write(json_encode(['status' => 'news']));
         return $resp->withHeader('Content-Type', 'application/json')->withStatus(200);
     }
+
+    function postNews(Request $req, Response $resp, array $args): Response
+    {
+        // TODO: Implémenter la logique de publication
+        $resp->getBody()->write(json_encode(['status' => 'posted']));
+        return $resp->withHeader('Content-Type', 'application/json')->withStatus(200);
+    }
 }

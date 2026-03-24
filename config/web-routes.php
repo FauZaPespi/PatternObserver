@@ -33,3 +33,4 @@ $app->post('/profile/password', [AuthController::class, 'profilePassword']);
 // Routes de l'API (à conserver si nécessaire)
 $app->post('/subscribe', [MainController::class, 'subscribeTo']);
 $app->post('/news', [MainController::class, 'getNews']);
+$app->post('/post', [MainController::class, 'postNews']);

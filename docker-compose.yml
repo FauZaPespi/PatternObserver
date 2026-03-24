@@ -1,6 +1,6 @@
 services:
   # Service MariaDB (Base de données)
-  mariadb:
+  db:
     image: mariadb:10.11
     container_name: ${APP_NAME}_mariadb
     environment:
@@ -31,7 +31,7 @@ services:
     volumes:
       - .:/var/www/html
     environment:
-      DB_HOST: mariadb
+      DB_HOST: db
       DB_PORT: 3306
       DB_NAME: ${DB_NAME:-observer_db}
       DB_USER: ${DB_USER:-observer_user}
@@ -39,7 +39,7 @@ services:
     networks:
       - app_network
     depends_on:
-      mariadb:
+      db:
         condition: service_healthy
 
   # Service Nginx (Le serveur web)

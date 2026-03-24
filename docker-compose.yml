@@ -1,4 +1,17 @@
 services:
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: ${APP_NAME}_phpmyadmin
+    ports:
+      - "8001:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+    depends_on:
+      - db
+    networks:
+      - app_network
+
   # Service MariaDB (Base de données)
   db:
     image: mariadb:10.11

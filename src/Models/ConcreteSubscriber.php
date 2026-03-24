@@ -1,13 +1,15 @@
 <?php
 namespace Makosc\Observer\Models;
 class ConcreteSubscriber implements Subscriber {
-    private $name;
+    private $pusher;
 
-    public function __construct($name) {
-        $this->name = $name;
+    public function __construct($pusherClient) {
+        $this->pusher = $pusherClient;
     }
 
     public function update($news) {
-        echo "{$this->name} received news: {$news}\n";
+        $this->pusher->trigger('notifications-channel', 'new-thread', [
+            'news' => $news
+        ]);
     }
 }

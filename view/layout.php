@@ -7,6 +7,7 @@
     <title><?= htmlspecialchars($title ?? 'Observer') ?></title>
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.3/dist/semantic.min.css">
+    <script src="js/notification.js" defer></script>
 
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/navbar.css">

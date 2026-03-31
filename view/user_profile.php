@@ -1,6 +1,4 @@
 <?php
-use Makosc\Observer\Models\UserManager;
-
 $profileUser = $profileUser ?? null;
 $threads = $threads ?? [];
 $followerCount = $followerCount ?? 0;
@@ -8,6 +6,11 @@ $followingCount = $followingCount ?? 0;
 $isOwnProfile = $isOwnProfile ?? false;
 $isFollowing = $isFollowing ?? false;
 $isAuthenticated = $isAuthenticated ?? false;
+
+if (!$profileUser) {
+    echo '<p>Utilisateur introuvable.</p>';
+    return;
+}
 ?>
 
 <div class="profile-container">

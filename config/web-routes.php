@@ -35,3 +35,5 @@ $app->post('/profile/password', [AuthController::class, 'profilePassword'])->add
 $app->post('/subscribe', [MainController::class, 'subscribeTo'])->add(new RateLimitMiddleware());
 $app->post('/news', [MainController::class, 'getNews'])->add(new RateLimitMiddleware());
 $app->post('/post', [MainController::class, 'postNews'])->add(new RateLimitMiddleware());
+$app->get('/user/{username}', [MainController::class, 'userProfile'])->add(new RateLimitMiddleware());
+$app->post('/follow/{username}', [MainController::class, 'followToggle'])->add(new RateLimitMiddleware());

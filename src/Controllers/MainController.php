@@ -7,6 +7,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Views\PhpRenderer;
 use Makosc\Observer\Models\Thread;
+use Makosc\Observer\Models\ThreadManager;
+use Makosc\Observer\Models\FollowManager;
 
 class MainController
 {
@@ -15,15 +17,86 @@ class MainController
         $view = new PhpRenderer(__DIR__ . "/../../view");
         $view->setLayout("layout.php");
 
-        // Récupérer les threads si existants (pour l'exemple)
-        $threads = \Makosc\Observer\Models\ThreadManager::getAllThreads();
+        $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
+        $threads = ThreadManager::getAllThreads();
+        $followingThreads = [];
+
+        if ($isAuthenticated && isset($_SESSION['user_id'])) {
+            $followingThreads = ThreadManager::getAllByFollowing((int) $_SESSION['user_id']);
+        }
 
         $data = [
-            'title' => "Accueil",
+            'title' => 'Threads',
             'threads' => $threads,
+            'followingThreads' => $followingThreads,
         ];
 
         return $view->render($resp, 'threads.php', $data);
+    }
+
+    function userProfile(Request $req, Response $resp, array $args): Response
+    {
+        $view = new PhpRenderer(__DIR__ . "/../../view");
+        $view->setLayout("layout.php");
+
+        $username = $args['username'] ?? '';
+        $profileUser = UserManager::findByUsername($username);
+
+        if (!$profileUser) {
+            $_SESSION['flash_message'] = 'Utilisateur introuvable.';
+            $_SESSION['flash_type'] = 'error';
+            return $resp->withHeader('Location', '/')->withStatus(302);
+        }
+
+        $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
+        $isOwnProfile = $isAuthenticated && isset($_SESSION['user_id']) && (int) $_SESSION['user_id'] === $profileUser->id;
+        $isFollowing = false;
+
+        if ($isAuthenticated && !$isOwnProfile && isset($_SESSION['user_id'])) {
+            $isFollowing = FollowManager::isFollowing((int) $_SESSION['user_id'], $profileUser->id);
+        }
+
+        $data = [
+            'title' => '@' . $profileUser->username,
+            'profileUser' => $profileUser,
+            'threads' => ThreadManager::getAllByUserId($profileUser->id),
+            'followerCount' => FollowManager::getFollowerCount($profileUser->id),
+            'followingCount' => FollowManager::getFollowingCount($profileUser->id),
+            'isOwnProfile' => $isOwnProfile,
+            'isFollowing' => $isFollowing,
+            'isAuthenticated' => $isAuthenticated,
+        ];
+
+        return $view->render($resp, 'user_profile.php', $data);
+    }
+
+    function followToggle(Request $req, Response $resp, array $args): Response
+    {
+        $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
+
+        if (!$isAuthenticated) {
+            return $resp->withHeader('Location', '/login')->withStatus(302);
+        }
+
+        $username = $args['username'] ?? '';
+        $targetUser = UserManager::findByUsername($username);
+
+        if (!$targetUser || $targetUser->id === (int) $_SESSION['user_id']) {
+            return $resp->withHeader('Location', '/user/' . urlencode($username))->withStatus(302);
+        }
+
+        $currentUserId = (int) $_SESSION['user_id'];
+
+        if (FollowManager::isFollowing($currentUserId, $targetUser->id)) {
+            FollowManager::unfollow($currentUserId, $targetUser->id);
+            $_SESSION['flash_message'] = 'Vous ne suivez plus @' . htmlspecialchars($targetUser->username) . '.';
+        } else {
+            FollowManager::follow($currentUserId, $targetUser->id);
+            $_SESSION['flash_message'] = 'Vous suivez maintenant @' . htmlspecialchars($targetUser->username) . ' !';
+        }
+
+        $_SESSION['flash_type'] = 'success';
+        return $resp->withHeader('Location', '/user/' . urlencode($username))->withStatus(302);
     }
 
     // Méthodes Observer (Pattern)
@@ -44,7 +117,7 @@ class MainController
     function postNews(Request $req, Response $resp, array $args): Response
     {
         $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
-        
+
         if (!$isAuthenticated) {
             $resp->getBody()->write(json_encode(['status' => 'error', 'message' => 'Not authentified']));
             return $resp->withHeader('Content-Type', 'application/json')->withStatus(401);
@@ -68,8 +141,8 @@ class MainController
             'user_id' => $user->id,
         ]);
 
-        $createdThread = \Makosc\Observer\Models\ThreadManager::createThread($thread);
-        
+        $createdThread = ThreadManager::createThread($thread);
+
         $resp->getBody()->write(json_encode(['status' => 'posted']));
         return $resp->withHeader('Content-Type', 'application/json')->withStatus(200);
     }

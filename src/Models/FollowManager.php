@@ -3,6 +3,8 @@
 namespace Makosc\Observer\Models;
 
 use Makosc\Observer\Database\Database;
+use Makosc\Observer\Models\User;
+use PDO;
 use PDOException;
 
 class FollowManager
@@ -11,10 +13,16 @@ class FollowManager
 
     public static function follow(int $followerId, int $followedId): bool
     {
+        if ($followerId === $followedId) {
+            return false;
+        }
+        if (self::isFollowing($followerId, $followedId)) {
+            return false;
+        }
         $db = Database::getInstance();
         try {
             $stmt = $db->prepare(
-                "INSERT IGNORE INTO " . self::$table . " (follower_id, followed_id) VALUES (:follower_id, :followed_id)"
+                "INSERT INTO " . self::$table . " (follower_id, followed_id) VALUES (:follower_id, :followed_id)"
             );
             return $stmt->execute([':follower_id' => $followerId, ':followed_id' => $followedId]);
         } catch (PDOException $e) {
@@ -30,7 +38,8 @@ class FollowManager
             $stmt = $db->prepare(
                 "DELETE FROM " . self::$table . " WHERE follower_id = :follower_id AND followed_id = :followed_id"
             );
-            return $stmt->execute([':follower_id' => $followerId, ':followed_id' => $followedId]);
+            $stmt->execute([':follower_id' => $followerId, ':followed_id' => $followedId]);
+            return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
             error_log("Error unfollowing user: " . $e->getMessage());
             return false;

@@ -59,9 +59,17 @@ class RateLimitMiddleware
                 flock($file, LOCK_UN);
                 fclose($file);
 
+                $referer = $request->getHeaderLine('Referer');
+                $redirect = !empty($referer) ? $referer : '/';
+
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION['flash_message'] = 'Trop de requêtes. Veuillez patienter avant de réessayer.';
+                $_SESSION['flash_type'] = 'warning';
+
                 $response = new SlimResponse();
-                $response->getBody()->write('Too Many Requests');
-                return $response->withStatus(429, 'Too Many Requests');
+                return $response->withHeader('Location', $redirect)->withStatus(302);
             }
 
             // Add the current request's timestamp
@@ -75,7 +83,7 @@ class RateLimitMiddleware
             // Release the lock
             flock($file, LOCK_UN);
         }
-
+        
         fclose($file);
 
         return $handler->handle($request);

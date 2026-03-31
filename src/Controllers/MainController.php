@@ -125,31 +125,40 @@ class MainController
         $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
 
         if (!$isAuthenticated) {
-            $resp->getBody()->write(json_encode(['status' => 'error', 'message' => 'Not authentified']));
-            return $resp->withHeader('Content-Type', 'application/json')->withStatus(401);
+            return $resp->withHeader('Location', '/login')->withStatus(302);
         }
 
         $username = $_SESSION['username'] ?? null;
         $user = UserManager::findByUsername($username);
         if (!$user) {
-            $resp->getBody()->write(json_encode(['status' => 'error', 'message' => 'User not found']));
-            return $resp->withHeader('Content-Type', 'application/json')->withStatus(404);
+            $_SESSION['flash_message'] = 'Utilisateur introuvable.';
+            $_SESSION['flash_type'] = 'error';
+            return $resp->withHeader('Location', '/')->withStatus(302);
         }
 
-        if (!isset($req->getParsedBody()['content']) || empty(trim($req->getParsedBody()['content']))) {
-            $resp->getBody()->write(json_encode(['status' => 'error', 'message' => 'Content cannot be empty']));
-            return $resp->withHeader('Content-Type', 'application/json')->withStatus(400);
+        $content = trim($req->getParsedBody()['content'] ?? '');
+        if (empty($content)) {
+            $_SESSION['flash_message'] = 'Le contenu du thread ne peut pas être vide.';
+            $_SESSION['flash_type'] = 'error';
+            return $resp->withHeader('Location', '/')->withStatus(302);
         }
 
         $thread = Thread::fromArray([
-            'content' => $req->getParsedBody()['content'],
+            'content' => $content,
             'created_at' => (new \DateTime())->format('Y-m-d H:i:s'),
             'user_id' => $user->id,
         ]);
 
-        $createdThread = ThreadManager::createThread($thread);
+        $created = ThreadManager::createThread($thread);
 
-        $resp->getBody()->write(json_encode(['status' => 'posted']));
-        return $resp->withHeader('Content-Type', 'application/json')->withStatus(200);
+        if ($created) {
+            $_SESSION['flash_message'] = 'Thread publié avec succès !';
+            $_SESSION['flash_type'] = 'success';
+        } else {
+            $_SESSION['flash_message'] = 'Erreur lors de la publication du thread.';
+            $_SESSION['flash_type'] = 'error';
+        }
+
+        return $resp->withHeader('Location', '/')->withStatus(302);
     }
 }

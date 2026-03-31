@@ -88,14 +88,18 @@ class MainController
         $currentUserId = (int) $_SESSION['user_id'];
 
         if (FollowManager::isFollowing($currentUserId, $targetUser->id)) {
-            FollowManager::unfollow($currentUserId, $targetUser->id);
-            $_SESSION['flash_message'] = 'Vous ne suivez plus @' . htmlspecialchars($targetUser->username) . '.';
+            $success = FollowManager::unfollow($currentUserId, $targetUser->id);
+            $_SESSION['flash_message'] = $success
+                ? 'Vous ne suivez plus @' . htmlspecialchars($targetUser->username) . '.'
+                : 'Une erreur est survenue. Veuillez réessayer.';
         } else {
-            FollowManager::follow($currentUserId, $targetUser->id);
-            $_SESSION['flash_message'] = 'Vous suivez maintenant @' . htmlspecialchars($targetUser->username) . ' !';
+            $success = FollowManager::follow($currentUserId, $targetUser->id);
+            $_SESSION['flash_message'] = $success
+                ? 'Vous suivez maintenant @' . htmlspecialchars($targetUser->username) . ' !'
+                : 'Une erreur est survenue. Veuillez réessayer.';
         }
 
-        $_SESSION['flash_type'] = 'success';
+        $_SESSION['flash_type'] = $success ? 'success' : 'error';
         return $resp->withHeader('Location', '/user/' . urlencode($username))->withStatus(302);
     }
 

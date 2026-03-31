@@ -89,4 +89,51 @@ class ThreadManager
             return [];
         }
     }
+
+    public static function getAllByUserId(int $userId): array
+    {
+        $db = Database::getInstance();
+
+        try {
+            $stmt = $db->prepare(
+                "SELECT * FROM " . self::$table . " WHERE user_id = :user_id ORDER BY created_at DESC"
+            );
+            $stmt->execute([':user_id' => $userId]);
+            $threads = [];
+
+            while ($data = $stmt->fetch()) {
+                $threads[] = Thread::fromArray($data);
+            }
+
+            return $threads;
+        } catch (PDOException $e) {
+            error_log("Error fetching threads by user ID: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public static function getAllByFollowing(int $userId): array
+    {
+        $db = Database::getInstance();
+
+        try {
+            $stmt = $db->prepare(
+                "SELECT t.* FROM " . self::$table . " t
+                 INNER JOIN follows f ON f.followed_id = t.user_id
+                 WHERE f.follower_id = :user_id
+                 ORDER BY t.created_at DESC"
+            );
+            $stmt->execute([':user_id' => $userId]);
+            $threads = [];
+
+            while ($data = $stmt->fetch()) {
+                $threads[] = Thread::fromArray($data);
+            }
+
+            return $threads;
+        } catch (PDOException $e) {
+            error_log("Error fetching following threads: " . $e->getMessage());
+            return [];
+        }
+    }
 }

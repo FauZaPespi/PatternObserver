@@ -4,7 +4,7 @@ use Makosc\Observer\Models\UserManager;
 $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
 $threads = $threads ?? [];
 $followingThreads = $followingThreads ?? [];
-$activeTab = $_GET['tab'] ?? 'all';
+$activeTab = $activeTab ?? 'all';
 ?>
 
 <?php if ($isAuthenticated): ?>
@@ -38,6 +38,7 @@ $activeTab = $_GET['tab'] ?? 'all';
             <?php else: ?>
                 <?php foreach ($threads as $thread): ?>
                     <?php $author = UserManager::findById($thread->UserId); ?>
+                    <?php if (!$author) continue; ?>
                     <div class="event">
                         <div class="label">
                             <a href="/user/<?= urlencode($author->username) ?>">
@@ -73,6 +74,7 @@ $activeTab = $_GET['tab'] ?? 'all';
             <?php else: ?>
                 <?php foreach ($followingThreads as $thread): ?>
                     <?php $author = UserManager::findById($thread->UserId); ?>
+                    <?php if (!$author) continue; ?>
                     <div class="event">
                         <div class="label">
                             <a href="/user/<?= urlencode($author->username) ?>">
@@ -97,9 +99,6 @@ $activeTab = $_GET['tab'] ?? 'all';
     <?php endif; ?>
 
 <?php else: ?>
-    <?php
-        header('Location: /login');
-        die();
-    ?>
+    <p>Veuillez <a href="/login">vous connecter</a> pour accéder aux threads.</p>
 <?php endif; ?>
 </div>

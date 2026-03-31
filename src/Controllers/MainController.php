@@ -14,21 +14,23 @@ class MainController
 {
     function threadsView(Request $req, Response $resp, array $args): Response
     {
+        $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
+
+        if (!$isAuthenticated) {
+            return $resp->withHeader('Location', '/login')->withStatus(302);
+        }
+
         $view = new PhpRenderer(__DIR__ . "/../../view");
         $view->setLayout("layout.php");
 
-        $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
         $threads = ThreadManager::getAllThreads();
-        $followingThreads = [];
-
-        if ($isAuthenticated && isset($_SESSION['user_id'])) {
-            $followingThreads = ThreadManager::getAllByFollowing((int) $_SESSION['user_id']);
-        }
+        $followingThreads = ThreadManager::getAllByFollowing((int) $_SESSION['user_id']);
 
         $data = [
             'title' => 'Threads',
             'threads' => $threads,
             'followingThreads' => $followingThreads,
+            'activeTab' => isset($_GET['tab']) && $_GET['tab'] === 'following' ? 'following' : 'all',
         ];
 
         return $view->render($resp, 'threads.php', $data);

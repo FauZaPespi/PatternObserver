@@ -30,7 +30,9 @@
                     <!-- Menu utilisateur connecté -->
                     <div class="ui dropdown item">
                         <i class="user circle icon"></i>
-                        <?= htmlspecialchars($_SESSION['username'] ?? 'Utilisateur') ?>
+                        <a href="/user/<?= urlencode($_SESSION['username'] ?? '') ?>" style="color: inherit; text-decoration: none;">
+                            <?= htmlspecialchars($_SESSION['username'] ?? 'Utilisateur') ?>
+                        </a>
                         <i class="dropdown icon"></i>
 
                         <div class="menu">

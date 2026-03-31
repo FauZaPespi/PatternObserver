@@ -35,9 +35,11 @@
 
                         <div class="menu">
                             <div class="header">Mon compte</div>
-                            <a href="/user/<?= urlencode($_SESSION['username'] ?? '') ?>" class="item">
+                            <?php if (!empty($_SESSION['username'])): ?>
+                            <a href="/user/<?= urlencode($_SESSION['username']) ?>" class="item">
                                 <i class="user icon"></i> Mon profil public
                             </a>
+                            <?php endif; ?>
                             <a href="/profile" class="item">
                                 <i class="id card icon"></i> Paramètres
                             </a>

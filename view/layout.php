@@ -30,15 +30,16 @@
                     <!-- Menu utilisateur connecté -->
                     <div class="ui dropdown item">
                         <i class="user circle icon"></i>
-                        <a href="/user/<?= urlencode($_SESSION['username'] ?? '') ?>" style="color: inherit; text-decoration: none;">
-                            <?= htmlspecialchars($_SESSION['username'] ?? 'Utilisateur') ?>
-                        </a>
+                        <?= htmlspecialchars($_SESSION['username'] ?? 'Utilisateur') ?>
                         <i class="dropdown icon"></i>
 
                         <div class="menu">
                             <div class="header">Mon compte</div>
+                            <a href="/user/<?= urlencode($_SESSION['username'] ?? '') ?>" class="item">
+                                <i class="user icon"></i> Mon profil public
+                            </a>
                             <a href="/profile" class="item">
-                                <i class="id card icon"></i> Profil
+                                <i class="id card icon"></i> Paramètres
                             </a>
                             <div class="divider"></div>
                             <a href="/logout" class="item">

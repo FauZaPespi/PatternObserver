@@ -29,7 +29,7 @@ if (!$profileUser) {
                 <?php if ($isOwnProfile && $profileUser->email): ?>
                     <span><i class="mail icon"></i> <?= htmlspecialchars($profileUser->email) ?></span>
                 <?php endif; ?>
-                <span><i class="calendar alternate outline icon"></i> Membre depuis <?= date('d/m/Y', strtotime($profileUser->created_at ?? 'now')) ?></span>
+                <span><i class="calendar alternate outline icon"></i> Membre depuis <?= $profileUser->created_at ? date('d/m/Y', strtotime($profileUser->created_at)) : 'Inconnu' ?></span>
             </div>
 
             <!-- Stats -->

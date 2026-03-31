@@ -1,6 +1,4 @@
 <?php
-use Makosc\Observer\Models\UserManager;
-
 $isAuthenticated = isset($_SESSION['is_authenticated']) && $_SESSION['is_authenticated'];
 $threads = $threads ?? [];
 $followingThreads = $followingThreads ?? [];
@@ -36,19 +34,18 @@ $activeTab = $activeTab ?? 'all';
             <?php if (empty($threads)): ?>
                 <p>Aucun thread trouvé.</p>
             <?php else: ?>
-                <?php foreach ($threads as $thread): ?>
-                    <?php $author = UserManager::findById($thread->UserId); ?>
-                    <?php if (!$author) continue; ?>
+                <?php foreach ($threads as $item): ?>
+                    <?php $thread = $item['thread']; $authorUsername = $item['author_username']; ?>
                     <div class="event">
                         <div class="label">
-                            <a href="/user/<?= urlencode($author->username) ?>">
-                                <img src="https://api.dicebear.com/9.x/thumbs/svg?seed=<?= urlencode($author->username) ?>"
-                                     alt="Avatar de <?= htmlspecialchars($author->username) ?>">
+                            <a href="/user/<?= urlencode($authorUsername) ?>">
+                                <img src="https://api.dicebear.com/9.x/thumbs/svg?seed=<?= urlencode($authorUsername) ?>"
+                                     alt="Avatar de <?= htmlspecialchars($authorUsername) ?>">
                             </a>
                         </div>
                         <div class="content">
                             <div class="summary">
-                                <a href="/user/<?= urlencode($author->username) ?>">@<?= htmlspecialchars($author->username) ?></a>
+                                <a href="/user/<?= urlencode($authorUsername) ?>">@<?= htmlspecialchars($authorUsername) ?></a>
                                 a publié un thread
                                 <div class="date"><?= $thread->PostDate->format('d M Y H:i') ?></div>
                             </div>
@@ -72,19 +69,18 @@ $activeTab = $activeTab ?? 'all';
                     <a href="/">Voir tous les threads</a> pour découvrir des utilisateurs.
                 </p>
             <?php else: ?>
-                <?php foreach ($followingThreads as $thread): ?>
-                    <?php $author = UserManager::findById($thread->UserId); ?>
-                    <?php if (!$author) continue; ?>
+                <?php foreach ($followingThreads as $item): ?>
+                    <?php $thread = $item['thread']; $authorUsername = $item['author_username']; ?>
                     <div class="event">
                         <div class="label">
-                            <a href="/user/<?= urlencode($author->username) ?>">
-                                <img src="https://api.dicebear.com/9.x/thumbs/svg?seed=<?= urlencode($author->username) ?>"
-                                     alt="Avatar de <?= htmlspecialchars($author->username) ?>">
+                            <a href="/user/<?= urlencode($authorUsername) ?>">
+                                <img src="https://api.dicebear.com/9.x/thumbs/svg?seed=<?= urlencode($authorUsername) ?>"
+                                     alt="Avatar de <?= htmlspecialchars($authorUsername) ?>">
                             </a>
                         </div>
                         <div class="content">
                             <div class="summary">
-                                <a href="/user/<?= urlencode($author->username) ?>">@<?= htmlspecialchars($author->username) ?></a>
+                                <a href="/user/<?= urlencode($authorUsername) ?>">@<?= htmlspecialchars($authorUsername) ?></a>
                                 a publié un thread
                                 <div class="date"><?= $thread->PostDate->format('d M Y H:i') ?></div>
                             </div>

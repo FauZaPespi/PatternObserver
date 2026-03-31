@@ -23,8 +23,8 @@ class MainController
         $view = new PhpRenderer(__DIR__ . "/../../view");
         $view->setLayout("layout.php");
 
-        $threads = ThreadManager::getAllThreads();
-        $followingThreads = ThreadManager::getAllByFollowing((int) $_SESSION['user_id']);
+        $threads = ThreadManager::getAllThreadsWithAuthors();
+        $followingThreads = ThreadManager::getAllByFollowingWithAuthors((int) $_SESSION['user_id']);
 
         $data = [
             'title' => 'Threads',

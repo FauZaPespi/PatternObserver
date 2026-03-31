@@ -52,6 +52,7 @@ class ThreadManager
         return null;
     }
 
+    /** Returns the first thread found for a user. Use getAllByUserId() to get all threads. */
     public static function findByUserId(int $userId): ?Thread
     {
         $db = Database::getInstance();
@@ -90,6 +91,7 @@ class ThreadManager
         }
     }
 
+    /** Returns all threads for a user, ordered newest first. */
     public static function getAllByUserId(int $userId): array
     {
         $db = Database::getInstance();

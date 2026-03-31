@@ -26,7 +26,7 @@ if (!$profileUser) {
             <h2>@<?= htmlspecialchars($profileUser->username) ?></h2>
 
             <div class="profile-meta">
-                <?php if ($profileUser->email): ?>
+                <?php if ($isOwnProfile && $profileUser->email): ?>
                     <span><i class="mail icon"></i> <?= htmlspecialchars($profileUser->email) ?></span>
                 <?php endif; ?>
                 <span><i class="calendar alternate outline icon"></i> Membre depuis <?= date('d/m/Y', strtotime($profileUser->created_at ?? 'now')) ?></span>
@@ -92,7 +92,7 @@ if (!$profileUser) {
                         <div class="event">
                             <div class="label">
                                 <img src="https://api.dicebear.com/9.x/thumbs/svg?seed=<?= urlencode($profileUser->username) ?>"
-                                     alt="Avatar">
+                                     alt="Avatar de <?= htmlspecialchars($profileUser->username) ?>">
                             </div>
                             <div class="content">
                                 <div class="summary">
